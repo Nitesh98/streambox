@@ -8,14 +8,19 @@ A video streaming web app, inspired by YouTube, built with plain **HTML, CSS and
 
 ## Features
 
-- **Home feed** with a responsive video grid and category filters
-- **Search** across titles, creators, categories and descriptions
-- **Watch page** with an HTML5 video player, video details and an "Up next" list
-- **Like, Watch later and History**, saved in the browser with `localStorage`
-- **Share** button that copies the video link
-- **Dark / light mode** that follows your system setting and remembers your choice
-- **Works on phones** with a slide-out menu (see the mobile screenshot below)
-- **Shareable URLs** for every page using hash routing (`#/watch/sintel`)
+- **Featured video** banner on the home page that changes every day
+- **Continue watching** row with progress bars, and **resume** from where you stopped
+- **Up next autoplay** with a 5-second countdown and a Cancel button
+- **Search** and **category filters**
+- **Comments** with an emoji bar, a character counter and Ctrl + Enter to post
+- **Like, Watch later and History**, with toast messages confirming each action
+- **Keyboard shortcuts**: Space/K play or pause, F fullscreen, M mute, ← → skip 5s, / search
+- **Dark theme by default** (following streaming-app design research), with a light mode
+- **Works on phones** with a slide-out menu that closes when you tap outside it
+- **Accessible**: visible keyboard focus, screen-reader labels, and reduced motion respected
+- **Friendly empty and error states**, e.g. when a video can't load
+
+![Home page](docs/screenshot-home.png)
 
 <img src="docs/screenshot-mobile.png" alt="Mobile view" width="260" />
 
@@ -24,7 +29,7 @@ A video streaming web app, inspired by YouTube, built with plain **HTML, CSS and
 - **No secrets:** the app needs no API keys or passwords, so nothing sensitive is in the code.
 - **XSS-safe rendering:** all text is added with `textContent`, never `innerHTML`, so user input such as a search for `<script>` is shown as text and can't run. A test checks this.
 - **Content Security Policy:** the page only runs scripts from its own site.
-- **Private by design:** likes and history stay in your own browser and are never sent to a server.
+- **Private by design:** likes, comments, history and watch progress stay in your own browser and are never sent to a server.
 
 ## Tech stack
 
@@ -68,7 +73,6 @@ StreamBox is a learning project and isn't affiliated with YouTube or Google.
 
 ## Ideas for next steps
 
-- Comments on videos (saved in the browser)
 - Playlists
-- Keyboard shortcuts (space to play or pause, F for fullscreen)
+- Shared comments using a real database
 - Rebuild in React
