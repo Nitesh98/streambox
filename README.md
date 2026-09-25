@@ -12,7 +12,7 @@ A video streaming web app, inspired by YouTube, built with plain **HTML, CSS and
 - **Continue watching** row with progress bars, and **resume** from where you stopped
 - **Up next autoplay** with a 5-second countdown and a Cancel button
 - **Search** and **category filters**
-- **Comments** with an emoji bar, a character counter and Ctrl + Enter to post
+- **Comments** you can post, edit and delete, with an emoji bar, a character counter and Ctrl + Enter to post
 - **Like, Watch later and History**, with toast messages confirming each action
 - **Keyboard shortcuts**: Space/K play or pause, F fullscreen, M mute, ← → skip 5s, / search
 - **Dark theme by default** (following streaming-app design research), with a light mode

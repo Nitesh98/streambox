@@ -86,6 +86,16 @@ export function addComment(videoId, text) {
   return comment;
 }
 
+export function editComment(videoId, commentId, text) {
+  const clean = text.trim().slice(0, MAX_COMMENT_LENGTH);
+  if (!clean) return false;
+  state.comments[videoId] = getComments(videoId).map((c) =>
+    c.id === commentId ? { ...c, text: clean, edited: Date.now() } : c
+  );
+  save();
+  return true;
+}
+
 export function deleteComment(videoId, commentId) {
   state.comments[videoId] = getComments(videoId).filter((c) => c.id !== commentId);
   save();

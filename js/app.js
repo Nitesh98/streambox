@@ -344,29 +344,92 @@ function commentsSection(videoId) {
   const list = el("ul", { class: "comment-list" });
   const count = el("h2", { class: "comments-title" });
 
+  let editingId = null; // the comment being edited, if any
+
+  const commentView = (c) =>
+    el("li", { class: "comment" }, [
+      el("p", { class: "comment-head" }, [
+        el("strong", { text: "You" }),
+        el("span", { class: "meta", text: ` · ${timeAgo(c.time)}${c.edited ? " (edited)" : ""}` }),
+      ]),
+      el("p", { class: "comment-text", text: c.text }),
+      el("div", { class: "comment-tools" }, [
+        el("button", {
+          class: "link-btn",
+          text: "Edit",
+          onclick: () => {
+            editingId = c.id;
+            render();
+          },
+        }),
+        el("button", {
+          class: "link-btn",
+          text: "Delete",
+          onclick: () => {
+            store.deleteComment(videoId, c.id);
+            render();
+            toast("Comment deleted");
+          },
+        }),
+      ]),
+    ]);
+
+  const commentEditor = (c) => {
+    const box = el("textarea", {
+      class: "comment-input",
+      maxlength: String(store.MAX_COMMENT_LENGTH),
+      rows: "3",
+      "aria-label": "Edit comment",
+    });
+    box.value = c.text;
+    const saveBtn = el("button", { class: "btn primary", type: "submit", text: "Save" });
+    const cancel = () => {
+      editingId = null;
+      render();
+    };
+    box.addEventListener("input", () => {
+      saveBtn.disabled = box.value.trim() === "";
+    });
+    const form = el("form", {
+      class: "comment-card",
+      onsubmit: (event) => {
+        event.preventDefault();
+        if (box.value.trim() === c.text) return cancel();
+        if (store.editComment(videoId, c.id, box.value)) {
+          editingId = null;
+          render();
+          toast("Comment updated");
+        }
+      },
+    }, [
+      box,
+      el("div", { class: "comment-footer" }, [
+        el("span", { class: "meta counter", text: "Esc to cancel · Ctrl + Enter to save" }),
+        el("div", { class: "comment-actions" }, [
+          el("button", { class: "btn", type: "button", text: "Cancel", onclick: cancel }),
+          saveBtn,
+        ]),
+      ]),
+    ]);
+    box.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") cancel();
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    // Put the cursor at the end of the text once it's on the page.
+    requestAnimationFrame(() => {
+      box.focus();
+      box.setSelectionRange(box.value.length, box.value.length);
+    });
+    return el("li", { class: "comment editing" }, [form]);
+  };
+
   const render = () => {
     const comments = store.getComments(videoId);
     count.textContent = `💬 ${comments.length} comment${comments.length === 1 ? "" : "s"}`;
-    list.replaceChildren(
-      ...comments.map((c) =>
-        el("li", { class: "comment" }, [
-          el("p", { class: "comment-head" }, [
-            el("strong", { text: "You" }),
-            el("span", { class: "meta", text: ` · ${timeAgo(c.time)}` }),
-          ]),
-          el("p", { class: "comment-text", text: c.text }),
-          el("button", {
-            class: "link-btn",
-            text: "Delete",
-            onclick: () => {
-              store.deleteComment(videoId, c.id);
-              render();
-              toast("Comment deleted");
-            },
-          }),
-        ])
-      )
-    );
+    list.replaceChildren(...comments.map((c) => (c.id === editingId ? commentEditor(c) : commentView(c))));
   };
 
   const input = el("textarea", {
