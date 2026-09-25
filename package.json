@@ -1,0 +1,14 @@
+{
+  "name": "streambox",
+  "version": "1.0.0",
+  "description": "A video streaming web app built with HTML, CSS and JavaScript.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/smoke.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  },
+  "license": "MIT"
+}
